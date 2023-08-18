@@ -1,0 +1,1 @@
+export type Province = { communityCode: string; code: string, name: string };

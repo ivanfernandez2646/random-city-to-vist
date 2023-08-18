@@ -1,0 +1,1 @@
+export type City = { provinceCode: string, code: string, name: string };

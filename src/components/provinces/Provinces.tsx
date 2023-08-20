@@ -1,35 +1,20 @@
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { FC } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-} from "@mui/material";
-import { FC, useEffect, useState } from "react";
-import { Community } from "../../types/Community";
-import { GeoApi } from "../../services/GeoApi";
-import { Province } from "../../types/Province";
+  filteredProvincesState,
+  selectedProvinceState,
+} from "../../state/State";
 
-type ProvincesProps = {
-  selectedCommunity: Community | undefined;
-  selectedProvince: Province | undefined;
-  handleProvinceChange: (event: SelectChangeEvent) => void;
-};
+const Provinces: FC = () => {
+  const [selectedProvince, setSelectedProvince] = useRecoilState(
+      selectedProvinceState
+    ),
+    filteredProvinces = useRecoilValue(filteredProvincesState);
 
-const Provinces: FC<ProvincesProps> = ({
-  selectedCommunity,
-  selectedProvince,
-  handleProvinceChange,
-}) => {
-  const [provinces, setProvinces] = useState<Community[]>([]);
-
-  useEffect(() => {
-    if (selectedCommunity) {
-      GeoApi.getProvincesByCommunity(selectedCommunity).then((provinces) => {
-        setProvinces(provinces);
-      });
-    }
-  }, [selectedCommunity]);
+  const handleProvinceChange = (event: any) => {
+    setSelectedProvince(JSON.parse(event.target.value));
+  };
 
   return (
     <FormControl
@@ -45,7 +30,7 @@ const Provinces: FC<ProvincesProps> = ({
         label="Province"
         onChange={handleProvinceChange}
       >
-        {provinces.map((province) => (
+        {filteredProvinces.map((province) => (
           <MenuItem key={province.code} value={JSON.stringify(province)}>
             {province.name}
           </MenuItem>

@@ -18,9 +18,9 @@ export class GeoApi {
             });
     }
 
-    static async getProvincesByCommunity(community: Community): Promise<Province[]> {
+    static async getProvinces(): Promise<Province[]> {
         return fetch(
-            `${GeoApi.URL}/provincias?CCOM=${community.code}&key=${GeoApi.KEY}&type=JSON&sandbox=0`
+            `${GeoApi.URL}/provincias?key=${GeoApi.KEY}&type=JSON&sandbox=0`
         )
             .then((res) => res.json())
             .then(({ data }: { data: { CCOM: string; CPRO: string, PRO: string }[] }) => {
@@ -30,14 +30,16 @@ export class GeoApi {
             });
     }
 
-    static async getRandomCityByProvince(province: Province): Promise<City> {
+    static async getCitiesByProvince(province: Province): Promise<City[]> {
+
         return fetch(
             `${GeoApi.URL}/municipios?CPRO=${province.code}&key=${GeoApi.KEY}&type=JSON&sandbox=0`
         )
             .then((res) => res.json())
             .then(({ data }: { data: { CPRO: string; CMUM: string, DMUN50: string }[] }) => {
-                const randomCity = data[Math.floor(Math.random() * data.length)]
-                return { provinceCode: randomCity.CPRO, code: randomCity.CMUM, name: randomCity.DMUN50 } as City;
+                return data.map((city) => {
+                    return { provinceCode: city.CPRO, code: city.CMUM, name: city.DMUN50 };
+                }) as City[];
             });
     }
 }

@@ -1,30 +1,18 @@
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-} from "@mui/material";
-import { FC, useEffect, useState } from "react";
-import { Community } from "../../types/Community";
-import { GeoApi } from "../../services/GeoApi";
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { FC } from "react";
 
-type CommunitiesProps = {
-  selectedCommunity: Community | undefined;
-  handleCommunityChange: (event: SelectChangeEvent) => void;
-};
+import { useRecoilState, useRecoilValue } from "recoil";
+import { communitiesState, selectedCommunityState } from "../../state/State";
 
-const Communities: FC<CommunitiesProps> = ({
-  selectedCommunity,
-  handleCommunityChange,
-}) => {
-  const [communities, setCommunities] = useState<Community[]>([]);
+const Communities: FC = () => {
+  const [selectedCommunity, setSelectedCommunity] = useRecoilState(
+      selectedCommunityState
+    ),
+    communities = useRecoilValue(communitiesState);
 
-  useEffect(() => {
-    GeoApi.getCommunities().then((communities) => {
-      setCommunities(communities);
-    });
-  }, []);
+  const handleCommunityChange = (event: any) => {
+    setSelectedCommunity(JSON.parse(event.target.value));
+  };
 
   return (
     <FormControl

@@ -35,6 +35,7 @@ function App() {
         setProvinces(provinces);
       }
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleRefreshNewCity = (event: any) => {
